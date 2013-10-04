@@ -106,7 +106,7 @@ public class Map {
 		return conf;
 	}
 
-	private void save(){
+	protected void save(){
 		try {
 			conf.save(file);
 		}

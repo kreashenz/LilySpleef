@@ -9,6 +9,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
+import com.strayyakits.kreashenz.Functions;
 import com.strayyakits.kreashenz.Lilypad;
 
 public class Arena {
@@ -21,10 +22,14 @@ public class Arena {
 	private String name;
 
 	private Map map;
-	
+
 	private int min = 1;
-	
+
 	private List<String> all = new ArrayList<String>();
+
+	private List<Player> allPlayer = new ArrayList<Player>();
+
+	private boolean running = false;
 
 	public Arena(String name, Map map){
 		this.name = name;
@@ -36,10 +41,29 @@ public class Arena {
 		conf = YamlConfiguration.loadConfiguration(file);
 
 	}
-	
+
 	public void start(int roundLength){
 		if(all.size() > min){
-			
+			running = true;
+
+		}
+	}
+
+	public void end(){
+
+	}
+
+	public void addPlayer(Player p){
+		if(!(isPlaying(p))){
+			allPlayer.add(p);
+			Utils.saveLocation(p, p.getLocation());
+		} else Functions.tell(p, "§cYou're already playing this arena!");
+	}
+
+	public void removePlayer(Player p){
+		if(isPlaying(p)){
+			allPlayer.remove(p.getName());
+			p.teleport(Utils.getSaveLoc(p));
 		}
 	}
 
@@ -50,6 +74,12 @@ public class Arena {
 			all.add(p);
 		}
 		return all;
+	}
+
+	public void sendMessage(String msg){
+		for(Player p : getAllPlayers()){
+			Functions.tell(p, msg);
+		}
 	}
 
 	public Map getMap(){
@@ -66,6 +96,14 @@ public class Arena {
 
 	public String getName(){
 		return name;
+	}
+
+	public boolean isPlaying(Player p){
+		return allPlayer.contains(p);
+	}
+	
+	public boolean getRunning(){
+		return running;
 	}
 
 }

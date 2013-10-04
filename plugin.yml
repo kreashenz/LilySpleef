@@ -1,0 +1,8 @@
+main: com.strayyakits.kreashenz.Lilypad
+name: LilySpleef
+version: 1.0
+description: LilySpleef
+commands:
+  lilypad:
+    description: Basic LilySpleef command
+    aliases: [lp, lilyspleef, lspleef]

@@ -7,7 +7,7 @@ import com.strayyakits.kreashenz.Lilypad;
 
 public abstract class ICommand {
 
-	private Lilypad plugin;
+	protected Lilypad plugin;
 
 	protected ICommand(Lilypad plugin){
 		this.plugin = plugin;
