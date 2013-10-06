@@ -16,35 +16,40 @@ public class CmdJoin extends ICommand {
 		super(plugin);
 	}
 
-	// Daaaaaaamn, this method looks VERY heavily block-ish..
-	
 	@Override
 	public void execute(CommandSender s, Command cmd, String[] args) {
 		Player p = (Player)s;
-		if(p.hasPermission("lilypad.join")){
 
-			if(args.length == 2){
+		if(!(p.hasPermission("lilypad.join"))){
+			Functions.noPerm(p);
+			return;
+		}
 
-				if(!Utils.isPlaying(p)){
+		if(args.length != 2){
+			Functions.tell(p, "§cInvalid arguments! Usage : §f/lp join <arena>");
+			return;
+		}
 
-					if(ArenaUtils.isArena(args[1])){
+		if(Utils.isPlaying(p)){
+			Functions.tell(p, "§cYou're already playing. You must §fleave §cto join a new game.");
+			return;
+		}
 
-						Arena arena = ArenaUtils.getArena(args[1]);
+		if(!(ArenaUtils.isArena(args[1]))){
+			Functions.tell(p, "§cThat arena wasn't found!");
+			return;
+		}
 
-						if(!arena.getRunning()){
+		Arena arena = ArenaUtils.getArena(args[1]);
 
-							arena.addPlayer(p);
-							Functions.tell(p, "§6You successfully joined the §9" + arena.getName() + " §6arena!");
+		if(!(arena.getRunning())){
+			Functions.tell(p, "§cThat arena has already started!");
+			return;
+		}
 
-						} else Functions.tell(p, "§cThat arena has already started!");
-
-					} else Functions.tell(p, "§cThat arena wasn't found!");
-
-				} else Functions.tell(p, "§cYou're already playing. You must §fleave §cto join a new game.");
-
-			} else Functions.tell(p, "§cInvalid arguments! Usage : §f/lp join <arena>");
-
-		} else Functions.noPerm(p);
+		arena.addPlayer(p);
+		Functions.tell(p, "§6You successfully joined the §9" + arena.getName() + " §6arena!");
+		Functions.broadcast("§6" + p.getName() + " §9joined the LilySpleef game! §7[§6" + arena.getAllPlayers().size() + " §9players§7]");
 	}
 
 }

@@ -1,9 +1,11 @@
 package com.strayyakits.kreashenz.game;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 public class ArenaUtils {
@@ -13,12 +15,25 @@ public class ArenaUtils {
 	public static void load(){
 		all.clear();
 
+		for(File maps : MapUtils.getMapsFolder().listFiles()){
+			String name = maps.getName().replace(".yml", "");
+			FileConfiguration conf = YamlConfiguration.loadConfiguration(maps);
+
+			if(conf.isString("arena")){
+				String aName = conf.getString("arena");
+				Map map = MapUtils.getMap(name);
+				Arena arena = new Arena(aName, map);
+
+				all.add(arena);
+			}
+		}
 
 	}
 
 	public static void addArena(Arena arena){
-		if(!(all.contains(arena)))
+		if(!(all.contains(arena))){
 			all.add(arena);
+		}
 	}
 
 	public static void removeArena(Arena arena){
@@ -32,9 +47,8 @@ public class ArenaUtils {
 		Map map = arena.getMap();
 		FileConfiguration mapConf = map.getConfig();
 		if(mapConf != null){
-			if(mapConf.isSet("arena")){
+			if(mapConf.isSet("arena"))
 				mapConf.set("arena", null);
-			}
 		}
 	}
 
@@ -53,7 +67,7 @@ public class ArenaUtils {
 		}
 		return arena;
 	}
-	
+
 	public static Arena getArena(Player p){
 		Arena arena = null;
 		for(Arena arenas : getAllArenas()){

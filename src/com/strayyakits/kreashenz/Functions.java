@@ -19,4 +19,10 @@ public class Functions {
 	public static void noPerm(Player p){
 		tell(p, Lilypad.getInstance().getConfig().getString("no-permission"));
 	}
+	
+	public static void broadcast(String msg){
+		for(Player p : Bukkit.getOnlinePlayers()){
+			tell(p, msg);
+		}
+	}
 }

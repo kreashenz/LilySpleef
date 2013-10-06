@@ -2,8 +2,12 @@ package com.strayyakits.kreashenz.game;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -20,14 +24,13 @@ public class Map {
 
 	private Location loc1;
 	private Location loc2;
-	private Location spawn;
 
 	private Arena arena;
 
-	public Map(String name){
+	public Map(String name, Lilypad instance){
 		this.name = name;
 
-		plugin = Lilypad.getInstance();
+		plugin = instance;
 
 		file = new File(plugin.getDataFolder() + File.separator + name + ".yml");
 		if(file.exists()){
@@ -46,16 +49,6 @@ public class Map {
 
 	public void setArena(Arena arena){
 		this.arena = arena;
-	}
-
-	public void setSpawn(Location loc){
-		this.spawn = loc;
-
-		conf.set("spawn.x", loc.getBlockX());
-		conf.set("spawn.y", loc.getBlockX());
-		conf.set("spawn.z", loc.getBlockX());
-		conf.set("spawn.world", loc.getWorld().getName());
-		save();
 	}
 
 	public void setPoint1(Location loc){
@@ -78,8 +71,39 @@ public class Map {
 		save();
 	}
 
-	public Location getSpawn(){
-		return spawn;
+	public List<Block> getBlocks(){
+		List<Block> blocks = new ArrayList<Block>();
+
+		Location loc1 = getPoint1();
+		Location loc2 = getPoint2();
+		int minX = Math.min(loc1.getBlockX(), loc2.getBlockX());
+		int minY = Math.min(loc1.getBlockY(), loc2.getBlockY());
+		int minZ = Math.min(loc1.getBlockZ(), loc2.getBlockZ());
+		int maxX = Math.max(loc1.getBlockX(), loc2.getBlockX());
+		int maxY = Math.max(loc1.getBlockY(), loc2.getBlockY());
+		int maxZ = Math.max(loc1.getBlockZ(), loc2.getBlockZ());
+
+		for(int x = minX; x <= maxX; x++){
+			for(int y = minY; y <= maxY; y++){
+				for(int z = minZ; z <= maxZ; z++){
+					Block b = loc1.getWorld().getBlockAt(x, y, z);
+					blocks.add(b);
+				}
+			}
+		}
+
+		return blocks;
+	}
+
+	public List<Location> getSpawns(){
+		List<Location> spawns = new ArrayList<Location>();
+
+		for(Block b : getBlocks()){
+			if(b.getType().equals(Material.WATER_LILY))
+				spawns.add(new Location(b.getWorld(), b.getLocation().getBlockX(), b.getLocation().getY() + 1, b.getLocation().getBlockZ()));
+		}
+
+		return spawns;
 	}
 
 	public Location getPoint1(){

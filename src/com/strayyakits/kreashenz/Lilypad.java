@@ -5,6 +5,8 @@ import java.util.logging.Level;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.strayyakits.kreashenz.command.CmdMain;
+import com.strayyakits.kreashenz.game.ArenaUtils;
+import com.strayyakits.kreashenz.game.MapUtils;
 
 public class Lilypad extends JavaPlugin {
 
@@ -19,6 +21,10 @@ public class Lilypad extends JavaPlugin {
 		getCommand("lilypad").setExecutor(new CmdMain(this));
 
 		saveResource("config.yml", false);
+
+		MapUtils.load();
+		ArenaUtils.load();
+
 	}
 
 	public void onDisable(){
