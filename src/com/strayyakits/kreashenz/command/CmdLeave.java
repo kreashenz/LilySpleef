@@ -4,10 +4,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.strayyakits.kreashenz.Functions;
 import com.strayyakits.kreashenz.Lilypad;
 import com.strayyakits.kreashenz.game.ArenaUtils;
 import com.strayyakits.kreashenz.game.Utils;
+import com.strayyakits.kreashenz.utils.Functions;
 
 public class CmdLeave extends ICommand {
 

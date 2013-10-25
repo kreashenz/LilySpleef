@@ -1,6 +1,8 @@
 package com.strayyakits.kreashenz.game;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -34,4 +36,13 @@ public class Utils {
 		}
 		return false;
 	}
+
+	public static List<Game> getAllGames(){
+		List<Game> game = new ArrayList<Game>();
+		
+		
+		
+		return game;
+	}
+
 }

@@ -4,11 +4,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.strayyakits.kreashenz.Functions;
 import com.strayyakits.kreashenz.Lilypad;
 import com.strayyakits.kreashenz.game.Arena;
 import com.strayyakits.kreashenz.game.ArenaUtils;
 import com.strayyakits.kreashenz.game.Utils;
+import com.strayyakits.kreashenz.utils.Functions;
 
 public class CmdJoin extends ICommand {
 
@@ -42,7 +42,7 @@ public class CmdJoin extends ICommand {
 
 		Arena arena = ArenaUtils.getArena(args[1]);
 
-		if(!(arena.getRunning())){
+		if(!(arena.isRunning())){
 			Functions.tell(p, "§cThat arena has already started!");
 			return;
 		}

@@ -17,7 +17,10 @@ public class MapUtils {
 
 	static {
 		plugin = Lilypad.getInstance();
-		file = new File(plugin.getDataFolder() + File.separator + "maps" + File.separator);
+		file = new File(plugin.getDataFolder(), "maps");
+		if(!file.exists()){
+			file.mkdirs();
+		}
 	}
 
 	private MapUtils(){
@@ -30,7 +33,7 @@ public class MapUtils {
 		for(File mf : file.listFiles()){
 			if(!(mf.getName().startsWith("."))){
 				String name = mf.getName().replace(".yml", "");
-				Map map = new Map(name, plugin);
+				Map map = new Map(name);
 
 				all.add(map);
 			}
@@ -40,7 +43,7 @@ public class MapUtils {
 
 	public static void createMap(String name, Selection sec){
 		if(!(isMap(name))){
-			Map map = new Map(name, plugin);
+			Map map = new Map(name);
 			map.setPoint1(sec.getMinimumPoint());
 			map.setPoint2(sec.getMaximumPoint());
 
@@ -50,7 +53,7 @@ public class MapUtils {
 
 	public static void deleteMap(String name){
 		if(!(isMap(name))){
-			Map map = new Map(name, plugin);
+			Map map = new Map(name);
 			map.getFile().delete();
 		}
 	}

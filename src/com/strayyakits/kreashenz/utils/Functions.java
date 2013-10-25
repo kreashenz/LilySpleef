@@ -1,10 +1,12 @@
-package com.strayyakits.kreashenz;
+package com.strayyakits.kreashenz.utils;
 
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+
+import com.strayyakits.kreashenz.Lilypad;
 
 public class Functions {
 
@@ -13,16 +15,17 @@ public class Functions {
 	}
 
 	public static void log(Level level, String log){
-		Bukkit.getLogger().log(level, "[LilySpleef] " + log);
+		Lilypad.getInstance().getLogger().log(level, log);
 	}
 
 	public static void noPerm(Player p){
 		tell(p, Lilypad.getInstance().getConfig().getString("no-permission"));
 	}
-	
+
 	public static void broadcast(String msg){
 		for(Player p : Bukkit.getOnlinePlayers()){
 			tell(p, msg);
 		}
 	}
+
 }

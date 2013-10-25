@@ -5,14 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
 
-import com.strayyakits.kreashenz.Functions;
 import com.strayyakits.kreashenz.Lilypad;
+import com.strayyakits.kreashenz.utils.Functions;
 
 public class Arena {
 
@@ -22,7 +21,7 @@ public class Arena {
 	private FileConfiguration conf;
 
 	private String name;
-
+	
 	private Map map;
 
 	private int min = 1;
@@ -31,41 +30,50 @@ public class Arena {
 
 	private boolean running = false;
 
+	public boolean countdown = false;
+
 	public Arena(String name, Map map){
 		this.name = name;
 		this.map = map;
 
 		plugin = Lilypad.getInstance();
 
-		file = new File(plugin.getDataFolder() + File.separator + "arenas.yml");
+		file = new File(plugin.getDataFolder() + File.separator + "arenas", "arenas.yml");
 		conf = YamlConfiguration.loadConfiguration(file);
 
 	}
 
-	public void start(int roundLength){
+	public void start(int start){
 		if(allPlayer.size() > min){
+			countdown = false;
 			running = true;
 			spawn(getAllPlayers());
 			sendMessage("§6Game has started! §cRUN YOUR ASSES OFF!");
+			for(Player p : getAllPlayers()){
+				p.getInventory().clear();
+				p.getInventory().setArmorContents(null);
+				for(PotionEffect pot : p.getActivePotionEffects())p.removePotionEffect(pot.getType());
+			}
 		}
 	}
 
 	public void end(){
-		if(allPlayer.size() == 1){
-			for(Player p : getAllPlayers()){
-				Functions.tell(p, "§6You have won the Spleef!");
-				p.teleport(Utils.getSaveLoc(p));
-				Functions.broadcast("§6" + p.getDisplayName() + " §chas won the Spleef!");
+		if(running == true){
+			if(allPlayer.size() == 1){
+				for(Player p : getAllPlayers()){
+					Functions.tell(p, "§6You have won the Spleef!");
+					p.teleport(Utils.getSaveLoc(p));
+					Functions.broadcast("§6" + p.getDisplayName() + " §chas won the Spleef!");
+				}
+			} else {
+				Functions.broadcast("§cNo one won that round!");
 			}
-		} else {
-			Functions.broadcast("§cNo one won that round!");
 		}
 	}
 
 	public void addPlayer(Player p){
 		if(!(isPlaying(p))){
 			allPlayer.add(p);
-			Utils.saveLocation(p, p.getLocation());
 		} else Functions.tell(p, "§cYou're already playing this arena!");
 	}
 
@@ -73,6 +81,7 @@ public class Arena {
 		if(isPlaying(p)){
 			allPlayer.remove(p.getName());
 			p.teleport(Utils.getSaveLoc(p));
+			Utils.delLocation(p);
 		}
 	}
 
@@ -85,16 +94,13 @@ public class Arena {
 	}
 
 	public void spawn(List<Player> players){
-		for(Player p : players){
-			for(Location loc : map.getSpawns()){
-				Block b = loc.getWorld().getBlockAt(loc);
-				if (b.getType() != null) {
-					if (b.getType() == Material.WATER_LILY){
-						p.teleport(b.getLocation());
-					}
-				}
-			}
-		}
+		List<Location> spawns = map.getSpawns();
+		List<Player> ps = players;
+
+		Location spawn = spawns.get((int)(Math.random() * spawns.size()));
+		Player p = ps.get((int)(Math.random() * ps.size()));
+
+		p.teleport(spawn);
 	}
 
 	public void sendMessage(String msg){
@@ -123,8 +129,12 @@ public class Arena {
 		return allPlayer.contains(p);
 	}
 
-	public boolean getRunning(){
+	public boolean isRunning(){
 		return running;
+	}
+
+	public boolean inCountdown(){
+		return countdown;
 	}
 
 }

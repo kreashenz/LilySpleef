@@ -11,11 +11,7 @@ import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import com.strayyakits.kreashenz.Lilypad;
-
 public class Map {
-
-	private Lilypad plugin;
 
 	private String name;
 
@@ -27,12 +23,10 @@ public class Map {
 
 	private Arena arena;
 
-	public Map(String name, Lilypad instance){
+	public Map(String name){
 		this.name = name;
 
-		plugin = instance;
-
-		file = new File(plugin.getDataFolder() + File.separator + name + ".yml");
+		file = new File(MapUtils.getMapsFolder(), File.separator + name + ".yml");
 		if(file.exists()){
 			conf = YamlConfiguration.loadConfiguration(file);
 		} else {
